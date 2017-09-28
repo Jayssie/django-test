@@ -34,6 +34,6 @@ class ArticleDetailView(generics.RetrieveUpdateDestroyAPIView):
     search_fields = ('description','title',)
 
 class AddFavoritesView(generics.UpdateAPIView):
-    queryset = Article.objects.all()
+    queryset = Article.objects.all().order_by('-id')
     serializer_class = ArticleFavoriteSerializer
     permission_classes = (IsAuthenticated,)

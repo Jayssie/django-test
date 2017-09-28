@@ -22,7 +22,13 @@ class UserSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
-
+    
+    def validate(self, validated_data):
+        try:
+            user = User.objects.get(username=validated_data['username'])
+        except User.DoesNotExist:
+            return validated_data
+        raise serializers.ValidationError("用户名已存在")
 
 class UserSignInSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,7 +49,7 @@ class ArticleSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Article
         fields = '__all__'
-        read_only_fields = ('id', 'user', 'favorites_total')
+        read_only_fields = ('user', 'favorites_total')
 
 class ArticleFavoriteSerializer(DynamicFieldsModelSerializer):
     class Meta:
